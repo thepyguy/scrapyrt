@@ -226,8 +226,13 @@ class CrawlResource(ServiceResource):
             max_requests = api_params['max_requests']
         except (KeyError, IndexError):
             max_requests = None
-
+            
+        crawler_params = api_params.copy()
+        for api_param in ['max_requests', 'start_requests', 'spider_name', 'url']:
+            crawler_params.pop(api_param, None)
+        kwargs.update(crawler_params)
         crawl_args = api_params.get("crawl_args")
+        
         if isinstance(crawl_args, str):
             try:
                 crawl_args = json.loads(unquote(crawl_args))
